@@ -1,21 +1,32 @@
 import React, { useEffect, useState } from "react";
-import { getAllTasks } from "../../services/taskService";
 
 const TaskList = () => {
   const [tasks, setTasks] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     const fetchTasks = async () => {
+      setIsLoading(true);
       try {
-        const tasks = await getAllTasks();
+        const response = await fetch('http://localhost:3000/tasks');
+        if (!response.ok) {
+          throw new Error('Failed to fetch tasks');
+        }
+        const tasks = await response.json();
         setTasks(tasks);
       } catch (error) {
-        console.error("Error fetching tasks:", error);
+        setError(error.message);
+      } finally {
+        setIsLoading(false);
       }
     };
 
     fetchTasks();
   }, []);
+
+  if (isLoading) return <div>Loading...</div>;
+  if (error) return <div>Error: {error}</div>;
 
   return (
     <div className="p-4">
