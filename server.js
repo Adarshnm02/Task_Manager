@@ -23,10 +23,10 @@ app.post('/tasks', async (req, res) => {
     res.json(task)
 })
 
-app.put('/task/:id', async (req, res) => {
+app.put('/tasks/:id', async (req, res) => {
     const task = await taskService.updateTask(req.params.id, req.body);
-    res.json(task)
-})
+    res.json(task);
+});
 
 app.delete('/tasks/:id', async (req, res) => {
     const task = await taskService.deleteTask(req.params.id);
